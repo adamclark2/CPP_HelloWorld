@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "SDL.h"
-#include "gl/glew.h"
+#include "GL/glew.h"
 
 class PlatformDetection{
     public:

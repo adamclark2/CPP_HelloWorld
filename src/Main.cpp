@@ -4,10 +4,11 @@
 #include <iostream>
 
 #include "SDL.h"
-#include "gl/glew.h";
+#include "GL/glew.h"
 
 #include "PlatformDetection.cpp"
 #include "Render.cpp"
+#include "ErrorCheck.cpp"
 
 SDL_Window* win = NULL;
 SDL_GLContext glcontext = NULL;
@@ -22,14 +23,9 @@ void doInit(){
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    // Anti-Alias
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
-
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     atexit(SDL_Quit);
 
-    win = SDL_CreateWindow("Hello C++",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,250,100, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE);
+    win = SDL_CreateWindow("Hello C++",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,250,100, SDL_WINDOW_OPENGL);
     if(win == NULL){
         printf("Window isn't created\n");
         exit(1);
@@ -37,13 +33,7 @@ void doInit(){
 
     glcontext = SDL_GL_CreateContext(win);
     glewInit();
-    glEnable(GL_MULTISAMPLE);
-    glEnable(GL_POINT_SMOOTH);
-    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-    glEnable(GL_LINE_SMOOTH);
-    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    glEnable(GL_POLYGON_SMOOTH);
-    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+    checkGLError(__LINE__, __FILE__);
 }
 
 int main(int argc, char **argv){
@@ -56,7 +46,8 @@ int main(int argc, char **argv){
     pd->showPlatform();
     delete pd;
 
-    SDL_ShowWindow(win);
+    glGetError();
+    checkGLError(__LINE__, __FILE__);
     Render* r = new Render();
     SDL_Event event;
     while (1) {

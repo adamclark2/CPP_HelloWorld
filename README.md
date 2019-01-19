@@ -13,7 +13,8 @@ Hello World c++ and SDL
         - Put the binaries in your mingw libs dir
 
     - Mac
-        - OK
+        - Download `glew` https://sourceforge.net/projects/glew/
+        - `make;sudo make install`
 
 # Makefile Config
     - Modify the makefile's `build: bin` target such that you are using `Mac` or `Windows` to compile
