@@ -1,0 +1,17 @@
+
+
+C++ Hello World
+------------------------------------
+Somthing hello-world (ish)
+
+Make Targets:
+    help: Show this help file
+    build: build
+    run: build & run
+
+Directories:
+    bin: Output binarys from build process
+    src: Source code
+    dep: Runtime dependencies
+    build_subsystem: Files related to build (Excluding the makefile)
+
