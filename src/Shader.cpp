@@ -3,8 +3,8 @@
 #include <fstream>
 
 #include "SDL.h"
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
+#include "SDL_opengl.h"
+#include "gl/glew.h"
 
 using namespace::std;
 
@@ -16,14 +16,16 @@ class Shader{
                 char* frag = this->fileToString("src/frag.glsl");
 
                 GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
-                GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-
                 glShaderSource(vertShader, 1, (const GLchar**) &vert, NULL);
                 glCompileShader(vertShader);
+
+                GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+                glShaderSource(fragShader, 1, (const GLchar**) &frag, NULL);
+                glCompileShader(fragShader);
+
             this->glCheckError();
                 this->program = glCreateProgram();
                 glAttachShader(this->program,vertShader);
-                glLinkProgram(this->program);
                 glAttachShader(this->program,fragShader);
                 glLinkProgram(this->program);
             this->glCheckError();
@@ -48,14 +50,14 @@ class Shader{
             GLenum err = glGetError();
             GLenum orig = err;
             while(err != GL_NO_ERROR){
-                char* errStr = (char*) gluErrorString(err);
-                printf("-----\nVertex shader error %d\n%s\n------\n", err, errStr);
+                //char* errStr = (char*) gluErrorString(err);
+                printf("-----\nVertex shader error %d\n%s\n------\n", err, '-');
                 err = glGetError();
             }
             if(orig != GL_NO_ERROR){
                 exit(1);
             }else{
-                printf("NO ERROR-----\n");
+                //printf("NO ERROR-----\n");
             }
         }
 
@@ -81,6 +83,7 @@ class Shader{
                     vert[i++] = infile.get();
                 }
                 infile.close();
+                vert[i - 1] = '\0';
 
                 return vert;
             }

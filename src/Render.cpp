@@ -3,91 +3,78 @@
 #include <iostream>
 
 #include "SDL.h"
-#include <OpenGL/gl.h>
-#include <OpenGL/gl3.h>
+#include "GL/glew.h"
 
 #include "Shader.cpp"
+
+void checkGLError(){
+    GLenum err = glGetError();
+    GLenum orig = err;
+    while(err != GL_NO_ERROR){
+        //char* errStr = (char*) gluErrorString(err);
+        printf("-----\nVertex shader error %d\n%s\n------\n", err, '-');
+        err = glGetError();
+    }
+    if(orig != GL_NO_ERROR){
+        exit(1);
+    }else{
+        //printf("NO ERROR-----\n");
+    }
+}
 
 class Render{
     public:
         Render(){
-
-        }
-
-        void doRender(){
-            this->win = NULL;
-            int flags = SDL_WINDOW_OPENGL;
-            this->win = SDL_CreateWindow("Hello C++",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,250,100,flags);
-            if(this->win == NULL){
-                printf("Window isn't created\n");
-                exit(1);
-            }
-
-
-            SDL_ShowWindow(this->win);
-            SDL_GLContext glcontext = SDL_GL_CreateContext(this->win);
-
-            printf("\n\n");
-            printf("Open GL Version   : %s\n", glGetString(GL_VERSION));
-            printf("Open GL Vendor    : %s\n", glGetString(GL_VENDOR));
-            printf("Open GL Renderer  : %s\n", glGetString(GL_RENDERER));
-            printf("Open GL SL        : %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-            printf("Open GL extensions: %s\n", glGetString(GL_EXTENSIONS));
-
-            glGetError();
-            Shader* s = new Shader();
-            //s->use();
-
-            float points[] = {
-            0.0f,  0.5f,  0.0f,
-            0.5f, -0.5f,  0.0f,
-            -0.5f, -0.5f,  0.0f
+            s = new Shader();
+            float pts[] = {
+                -1.0f, -1.0f, 0.0f,
+                1.0f, -1.0f, 0.0f,
+                0.0f,  1.0f, 0.0f
             };
 
-            GLuint vbo = 0;
-            glGenBuffers(1, &vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
 
-            GLuint vao = 0;
-            glGenVertexArrays(1, &vao);
-            glBindVertexArray(vao);
-            glEnableVertexAttribArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, vbo);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-                
+            glGenBuffers(1, buf);
+            glBindBuffer(GL_ARRAY_BUFFER, buf[0]);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 9, pts, GL_DYNAMIC_DRAW);
+            checkGLError();
+        }
 
-            // Render loop
-            SDL_Event event;
-            while (1) {
-                SDL_PollEvent(&event);
-                if (event.type == SDL_QUIT) {
-                    break;
-                }
-
-                // Blink background
-                if(SDL_GetTicks() % 2000 > 1000){
-                    glClearColor(1,1,1,1);
-                }else{
-                    glClearColor(1,0,0,1);   
-                }
-                glClear(GL_COLOR_BUFFER_BIT);
-            
-
-               s->use();
-
-               
-               glBindVertexArray(vao);
-               glDrawArrays(GL_TRIANGLES, 0, 3);
-               SDL_GL_SwapWindow(this->win);  
-            }
-
-            // Cleanup
+        ~Render(){
+            glDeleteBuffers(1, buf);
             delete s;
-            SDL_GL_DeleteContext(glcontext); 
-            SDL_DestroyWindow(this->win);
+        }
+
+        /* 
+            Render stuff
+
+            Render loop is in main()
+        */
+        void doRender(){
+            // Blink background
+            if(SDL_GetTicks() % 2000 > 1000){
+                glClearColor(1,1,1,1);
+            }else{
+                glClearColor(1,0,0,1);   
+            }
+            glClear(GL_COLOR_BUFFER_BIT);
+            
+            glUseProgram(s->program);
+            checkGLError();
+
+            glUniform4f(glGetUniformLocation(s->program, "vColor"), 0.5f, 0.5f, 0.5f, 1.0f);
+
+            GLuint vPos = glGetAttribLocation(s->program, "vPos");
+            glEnableVertexAttribArray(vPos);
+            glBindBuffer(GL_ARRAY_BUFFER, buf[0]);
+            glVertexAttribPointer(vPos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+            glDrawArrays(GL_TRIANGLES, 0, 9);
+            glFlush();
+            checkGLError();
         }
 
     private:
-        SDL_Window* win;
+        GLuint buf[1];
+        Shader* s;
+        
 };
+

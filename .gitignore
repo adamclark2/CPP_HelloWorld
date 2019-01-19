@@ -3,3 +3,6 @@
 
 # C++ Build
 bin/
+
+# VS Code
+.vscode/
