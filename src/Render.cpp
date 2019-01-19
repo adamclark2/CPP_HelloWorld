@@ -47,20 +47,17 @@ class Render{
             glClear(GL_COLOR_BUFFER_BIT);
             checkGLError(__LINE__, __FILE__);
 
-            glUniform4f(glGetUniformLocation(s->program, "vColor"), 0.5f, 0.5f, 0.5f, 1.0f);
-            GLuint vPos = glGetAttribLocation(s->program, "vPos");
-            glValidateProgram(s->program);
-            dumpProgramInfo(s->program, "Prog1");
-
             checkGLError(__LINE__, __FILE__);
-
-            glEnableVertexAttribArray(vPos);
-            glBindBuffer(GL_ARRAY_BUFFER, buf[0]);
-            glVertexAttribPointer(vPos, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
             checkGLError(__LINE__, __FILE__);
             glUseProgram(s->program);
             checkGLError(__LINE__, __FILE__);
+
+            glUniform4f(glGetUniformLocation(s->program, "vColor"), 0.5f, 0.5f, 0.5f, 1.0f);
+            GLuint vPos = glGetAttribLocation(s->program, "vPos");
+            glEnableVertexAttribArray(vPos);
+            glBindBuffer(GL_ARRAY_BUFFER, buf[0]);
+            glVertexAttribPointer(vPos, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 
             
