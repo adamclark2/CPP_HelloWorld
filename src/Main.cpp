@@ -33,6 +33,7 @@ void doInit(){
 
     glcontext = SDL_GL_CreateContext(win);
     glewInit();
+    glViewport(0,0,250,100);
     checkGLError(__LINE__, __FILE__);
 }
 
