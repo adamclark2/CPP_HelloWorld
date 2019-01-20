@@ -1,8 +1,11 @@
 #version 330
 
 in vec3 vPos;
+
+uniform vec3 vWinSize;
+uniform mat4 vRot;
 uniform mat4 vTransform;
 
 void main(void){
-    gl_Position = vTransform * vec4(vPos, 1.0);
+    gl_Position = (vRot * vTransform) * vec4((vPos / vWinSize), 1.0) ;
 }

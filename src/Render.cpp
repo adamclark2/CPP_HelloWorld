@@ -52,7 +52,7 @@ class Render{
 
             Render loop is in main()
         */
-        void doRender(){
+        void doRender(float size[]){
             checkGLError(__LINE__, __FILE__);
             // Blink background
             if(SDL_GetTicks() % 2000 > 1000){
@@ -66,14 +66,15 @@ class Render{
             checkGLError(__LINE__, __FILE__);
 
             checkGLError(__LINE__, __FILE__);
-
-            checkGLError(__LINE__, __FILE__);
             glUseProgram(s->program);
             checkGLError(__LINE__, __FILE__);
 
+
+
+
             xTranslate += 0.01f;   
-            xTranslate = xTranslate > 1 ? 0.0f : xTranslate;
-            float scale = 1.0f;       
+            xTranslate = xTranslate > 1 ? -1.0f : xTranslate;
+            float scale = 100.0f;       
             float mat[] = {
                 scale,0.0f,0.0f,xTranslate,
                 0.0f,scale,0.0f,0.0f,
@@ -84,9 +85,39 @@ class Render{
             glUniformMatrix4fv(vTransform, 1, GL_TRUE, mat);
             checkGLError(__LINE__, __FILE__);
 
+
+
+
+
+            float matRot[] = {
+                cos(PI/4 + xTranslate/2.0),0.0f,sin(PI/4 + xTranslate/2.0),0.0f,
+                0.0f,1.0f,0.0f,0.0f,
+                -sin(PI/4 + xTranslate/2.0),0.0f,cos(PI/4 + xTranslate/2.0),0.0f,
+                0.0f,0.0f,0.0f,1.0f
+            };
+            GLuint vRot = glGetUniformLocation(s->program, "vRot");
+            glUniformMatrix4fv(vRot, 1, GL_TRUE, matRot);
+            checkGLError(__LINE__, __FILE__);
+
+
+
+
+            float vWinTransformFV[] = {size[0], size[1], 1};
+            GLuint vWinSize = glGetUniformLocation(s->program, "vWinSize");
+            glUniform3fv(vWinSize, 1, vWinTransformFV);
+            checkGLError(__LINE__, __FILE__);
+
+
+
+
             glUniform4f(glGetUniformLocation(s->program, "vColor"), 0.5f, 0.5f, 0.5f, 1.0f);
             checkGLError(__LINE__, __FILE__);
             
+
+
+
+
+
             glBindVertexArray(vao[0]);
             GLuint vPos = glGetAttribLocation(s->program, "vPos");
             glEnableVertexAttribArray(vPos);

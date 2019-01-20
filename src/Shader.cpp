@@ -18,20 +18,24 @@ class Shader{
                 char* frag = this->fileToString("src/frag.glsl");
 
                 GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
+                GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+                this->program = glCreateProgram();
+
                 glShaderSource(vertShader, 1, (const GLchar**) &vert, NULL);
                 glCompileShader(vertShader);
                 dumpShaderInfo(vertShader, "vert");
 
-                GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+                
                 glShaderSource(fragShader, 1, (const GLchar**) &frag, NULL);
                 glCompileShader(fragShader);
                 dumpShaderInfo(fragShader, "frag");
 
             checkGLError(__LINE__, __FILE__);
-                this->program = glCreateProgram();
+                
                 glAttachShader(this->program,vertShader);
                 glAttachShader(this->program,fragShader);
                 glLinkProgram(this->program);
+
             checkGLError(__LINE__, __FILE__);
                 glDeleteShader(vertShader);
                 glDeleteShader(fragShader);
