@@ -19,6 +19,8 @@ class Render{
                 0.0f,  1.0f, 0.0f
             };
 
+            glGenVertexArrays(1,vao);
+            glBindVertexArray(vao[0]);
 
             glGenBuffers(1, buf);
             glBindBuffer(GL_ARRAY_BUFFER, buf[0]);
@@ -28,6 +30,7 @@ class Render{
 
         ~Render(){
             glDeleteBuffers(1, buf);
+            glDeleteVertexArrays(1, vao);
             delete s;
         }
 
@@ -55,11 +58,10 @@ class Render{
 
             glUniform4f(glGetUniformLocation(s->program, "vColor"), 0.5f, 0.5f, 0.5f, 1.0f);
             GLuint vPos = glGetAttribLocation(s->program, "vPos");
+            glBindVertexArray(vao[0]);
+
             glEnableVertexAttribArray(vPos);
-            glBindBuffer(GL_ARRAY_BUFFER, buf[0]);
             glVertexAttribPointer(vPos, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-
             
             glDrawArrays(GL_TRIANGLES, 0, 9);
             glFlush();
@@ -68,6 +70,7 @@ class Render{
 
     private:
         GLuint buf[1];
+        GLuint vao[1];
         Shader* s;
         
 };

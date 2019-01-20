@@ -40,7 +40,7 @@ class Shader{
             checkGLError(__LINE__, __FILE__);
 
             glValidateProgram(this->program);
-            dumpProgramInfo(this->program, "Prog1");
+            dumpProgramInfo(this->program, "Prog1 Shader.cpp");
         }
 
         ~Shader(){
