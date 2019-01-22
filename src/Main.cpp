@@ -66,6 +66,16 @@ int main(int argc, char **argv){
     pd->showPlatform();
     delete pd;
 
+    GLint ret = 0;
+    glGetIntegerv(GL_MAX_UNIFORM_LOCATIONS, &ret);
+    printf("Max uniform locs: %d\n", ret);
+    ret = 0;
+    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &ret);
+    printf("Max uniform block size: %d\n", ret);
+    ret = 0;
+    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &ret);
+    printf("Max uniform buffer bindings: %d\n", ret);
+
     glGetError();
     checkGLError(__LINE__, __FILE__);
     Render* r = new Render();
