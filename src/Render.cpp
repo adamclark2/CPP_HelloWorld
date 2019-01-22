@@ -75,18 +75,10 @@ class Render{
             xTranslate += 0.01f;   
             xTranslate = xTranslate > 1 ? -1.0f : xTranslate;
             float scale = 100.0f;       
-            float mat[] = {
-                scale,0.0f,0.0f,xTranslate,
-                0.0f,scale,0.0f,0.0f,
-                0.0f,0.0f,scale,0.0f,
-                0.0f,0.0f,0.0f,1.0f
-            };
-            GLuint vTransform = glGetUniformLocation(s->program, "vTransform");
-            glUniformMatrix4fv(vTransform, 1, GL_TRUE, mat);
-            checkGLError(__LINE__, __FILE__);
-
-
-
+            s->setScaleAndTranslation(scale, xTranslate, 0.0f, 0.0f);
+            s->setWindowSize(size[0], size[1]);
+            s->setColor(0.5f,0.5f,0.5f,1.0f);
+            
 
 
             float matRot[] = {
@@ -95,27 +87,7 @@ class Render{
                 -sin(PI/4 + xTranslate/2.0),0.0f,cos(PI/4 + xTranslate/2.0),0.0f,
                 0.0f,0.0f,0.0f,1.0f
             };
-            GLuint vRot = glGetUniformLocation(s->program, "vRot");
-            glUniformMatrix4fv(vRot, 1, GL_TRUE, matRot);
-            checkGLError(__LINE__, __FILE__);
-
-
-
-
-            float vWinTransformFV[] = {size[0], size[1], 1};
-            GLuint vWinSize = glGetUniformLocation(s->program, "vWinSize");
-            glUniform3fv(vWinSize, 1, vWinTransformFV);
-            checkGLError(__LINE__, __FILE__);
-
-
-
-
-            glUniform4f(glGetUniformLocation(s->program, "vColor"), 0.5f, 0.5f, 0.5f, 1.0f);
-            checkGLError(__LINE__, __FILE__);
-            
-
-
-
+            s->setRotation(matRot);
 
 
             glBindVertexArray(vao[0]);

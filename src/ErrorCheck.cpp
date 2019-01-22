@@ -2,10 +2,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "gl/glew.h"
+#include "GL/glew.h"
 
 void checkGLError(int line, char* file){
-    /*
+    if(glDebugMessageCallback != NULL){
+        return;
+    }
+    
     GLenum err = glGetError();
     GLenum orig = err;
 
@@ -25,9 +28,7 @@ void checkGLError(int line, char* file){
         //exit(1);
     }else{
         //printf("NO ERROR-----\n");
-    }*/
-
-    // Replaced by OpenGL's error stuff
+    }
 }
 
 void dumpShaderInfo(GLuint shader, char* shaderName){

@@ -55,6 +55,36 @@ class Shader{
             glUseProgram(this->program);
         }
 
+        void setColor(float r, float g, float b, float a){
+            glUniform4f(glGetUniformLocation(this->program, "vColor"), r,g,b,a);
+            checkGLError(__LINE__, __FILE__);
+        }
+
+        void setRotation(float mat4Rot[]){
+            GLuint vRot = glGetUniformLocation(this->program, "vRot");
+            glUniformMatrix4fv(vRot, 1, GL_TRUE, mat4Rot);
+            checkGLError(__LINE__, __FILE__);
+        }
+
+        void setScaleAndTranslation(float scale, float xTrans, float yTrans, float zTrans){
+            float mat[] = {
+                scale,0.0f,0.0f,xTrans,
+                0.0f,scale,0.0f,yTrans,
+                0.0f,0.0f,scale,zTrans,
+                0.0f,0.0f,0.0f,1.0f
+            };
+            GLuint vTransform = glGetUniformLocation(this->program, "vTransform");
+            glUniformMatrix4fv(vTransform, 1, GL_TRUE, mat);
+            checkGLError(__LINE__, __FILE__);
+        }
+
+        void setWindowSize(float width, float height){
+            float vWinTransformFV[] = {width, height, 1};
+            GLuint vWinSize = glGetUniformLocation(this->program, "vWinSize");
+            glUniform3fv(vWinSize, 1, vWinTransformFV);
+            checkGLError(__LINE__, __FILE__);
+        }
+
         GLint program;
 
         private:

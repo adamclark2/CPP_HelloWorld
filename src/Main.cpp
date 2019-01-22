@@ -38,8 +38,11 @@ void doInit(){
     glViewport(0,0,800,400);
     checkGLError(__LINE__, __FILE__);
 
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback((GLDEBUGPROC) &glDebugCallback, 0);
+    if(glDebugMessageCallback != NULL){
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback((GLDEBUGPROC) &glDebugCallback, 0);
+    }
+    printf("init success!\n");
 }
 
 void cleanup(){
@@ -65,16 +68,6 @@ int main(int argc, char **argv){
     pd->printPlatform();
     pd->showPlatform();
     delete pd;
-
-    GLint ret = 0;
-    glGetIntegerv(GL_MAX_UNIFORM_LOCATIONS, &ret);
-    printf("Max uniform locs: %d\n", ret);
-    ret = 0;
-    glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &ret);
-    printf("Max uniform block size: %d\n", ret);
-    ret = 0;
-    glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &ret);
-    printf("Max uniform buffer bindings: %d\n", ret);
 
     glGetError();
     checkGLError(__LINE__, __FILE__);
